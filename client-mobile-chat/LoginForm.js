@@ -45,7 +45,9 @@ export default class LoginForm extends React.Component {
             leftIcon={<CustomIcon isPassword={true} />}
           />
           <Button
-            onClick={() => this.login()}
+            onPress={() => this.props.navigation.navigate('Chat')}
+            
+            // onClick={() => this.login()}
             buttonStyle={styles.buttonStyle}
             title="LOGIN"
           // loading
