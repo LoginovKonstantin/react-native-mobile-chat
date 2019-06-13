@@ -1,12 +1,15 @@
 import React from 'react';
-import { StyleSheet, View } from 'react-native';
+import { StyleSheet, View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Input, Button } from 'react-native-elements';
+import { _setData } from './localStorage';
+import { host } from './config';
 
 export default class LoginForm extends React.Component {
   state = {
     login: '',
-    password: ''
+    password: '',
+    error: null
   }
   handleLogin(value) {
     this.setState({ login: value });
@@ -15,10 +18,45 @@ export default class LoginForm extends React.Component {
     this.setState({ password: value })
   }
   login() {
-    console.log(this.state);
+    const { login, password } = this.state;
+    if (
+      login.length > 1 &&
+      login.length < 20 &&
+      password.length > 1 &&
+      password.length < 20
+    ) {
+      fetch(`${host}/api/login/`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ login, password }),
+      })
+      .then((response) => response.json())
+      .then(async (json) => {
+        if(json && json.token) {
+          await _setData('token', json.token);
+          await _setData('login', login);
+          this.props.navigation.push('Chat')
+        } else {
+          this.setState({ error: 'Invalid login | password' });
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });
+    } else {
+      console.log('error');
+    }
+
   }
   render() {
     const color = '#6a739f';
+    const error = this.state.error != null ? 
+      (<Text style={{color: 'red'}}>{this.state.error}</Text>) :
+      (<Text>{''}</Text>);
+
     return (
       <View style={{ flex: 1, flexDirection: 'row' }} >
         <View style={{ width: 60 }} />
@@ -45,13 +83,11 @@ export default class LoginForm extends React.Component {
             leftIcon={<CustomIcon isPassword={true} />}
           />
           <Button
-            onPress={() => this.props.navigation.navigate('Chat')}
-            
-            // onClick={() => this.login()}
+            onClick={() => this.login()}
             buttonStyle={styles.buttonStyle}
             title="LOGIN"
-          // loading
           />
+          {error}
         </View>
         <View style={{ width: 60 }} />
       </View>

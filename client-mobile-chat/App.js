@@ -1,12 +1,40 @@
 import React from 'react';
-import { Image, View, Text, Button } from 'react-native';
+import { Image, View } from 'react-native';
 import { createStackNavigator } from 'react-navigation';
 import LoginForm from './LoginForm';
+import ChatScreen from './ChatScreen';
+import { _getData, _removeData } from './localStorage';
+import { host } from './config';
 
 class App extends React.Component {
   static navigationOptions = {
     header: null
   }
+  async componentDidMount() {
+    const token = await _getData('token');
+    console.log(token)
+    fetch(`${host}/api/token/`, {
+        method: 'POST',
+        headers: {
+          Accept: 'application/json',
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ token }),
+      }).then((response) => response.json())
+      .then(async (json) => {
+        if(json && json.token) {
+          this.props.navigation.push('Chat')
+        } else {
+          await _removeData('login', login);
+          await _removeData('token', token);
+          this.props.navigation.push('Login')
+        }
+      })
+      .catch((error) => {
+        console.error(error);
+      });    
+  }
+
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: '#2e3246' }}>
@@ -22,19 +50,7 @@ class App extends React.Component {
   }
 }
 
-class ChatScreen extends React.Component {
-  render() {
-    return (
-      <View style={{ flex: 1, alignItems: 'center', justifyContent: 'center' }}>
-        <Text>Details Screen</Text>
-        <Button
-          title="Go to Home Screen"
-          onPress={() => this.props.navigation.navigate('Login')}
-        />
-      </View>
-    );
-  }
-}
+
 
 export default createStackNavigator(
   {
