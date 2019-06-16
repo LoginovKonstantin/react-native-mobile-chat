@@ -85,7 +85,7 @@ export default class LoginForm extends React.Component {
           <Button
             onClick={() => this.login()}
             buttonStyle={styles.buttonStyle}
-            title="LOGIN"
+            title="SIGN IN"
           />
           {error}
         </View>
