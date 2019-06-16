@@ -3,7 +3,7 @@ import { StyleSheet, View, Text } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Input, Button } from 'react-native-elements';
 import { _setData } from './localStorage';
-import { host } from './config';
+import { REST_HOST } from './config';
 
 export default class LoginForm extends React.Component {
   state = {
@@ -25,7 +25,7 @@ export default class LoginForm extends React.Component {
       password.length > 1 &&
       password.length < 20
     ) {
-      fetch(`${host}/api/login/`, {
+      fetch(`${REST_HOST}/api/login/`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',

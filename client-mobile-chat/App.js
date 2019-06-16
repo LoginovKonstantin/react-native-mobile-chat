@@ -4,7 +4,7 @@ import { createStackNavigator } from 'react-navigation';
 import LoginForm from './LoginForm';
 import ChatScreen from './ChatScreen';
 import { _getData, _removeData } from './localStorage';
-import { host } from './config';
+import { REST_HOST } from './config';
 
 class App extends React.Component {
   static navigationOptions = {
@@ -13,7 +13,7 @@ class App extends React.Component {
   async componentDidMount() {
     const token = await _getData('token');
     console.log(token)
-    fetch(`${host}/api/token/`, {
+    fetch(`${REST_HOST}/api/token/`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -49,8 +49,6 @@ class App extends React.Component {
     )
   }
 }
-
-
 
 export default createStackNavigator(
   {

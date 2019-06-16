@@ -1,24 +1,12 @@
 const app = require('express')();
 const cors = require('cors');
 const bodyParser = require('body-parser');
-const server = require('http').Server(app);
-const io = require('socket.io')(server);
 const users = require('./users');
 const jwt = require('jsonwebtoken');
 
-// app.use(cors({ origin: '*' }))
-app.use(cors({ origin: 'http://192.168.0.103:19006' }))
-io.origins(['http://192.168.0.103:19006']);
+app.use(cors({ origin: '*' }))
 app.use(bodyParser.json());
 app.use(bodyParser.urlencoded({ extended: true }));
-
-io.on('connection', function (socket) {
-  socket.emit('news', { hello: 'world' });
-  socket.on('my other event', function (data) {
-    console.log(data);
-  });
-  console.log(123123)
-});
 
 // попадает в коммит, т. к. проект по учебе
 const secret = 'KJasdiofsj*(*(SAdakld923l1k23';
@@ -56,6 +44,7 @@ app.post('/api/token', function (req, res) {
     res.status(500).send({ error: 'Access denied' });
 });
 
-app.listen(8088, function () {
-  console.log('Example app listening on port 8088!');
+const port = 8088;
+app.listen(port, function () {
+  console.log(`Rest-server listening on ${port}`);
 });

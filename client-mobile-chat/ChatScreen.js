@@ -1,20 +1,33 @@
 import React from 'react';
-import { StyleSheet, View, Text } from 'react-native';
+import { StyleSheet, View, Text, TextInput } from 'react-native';
 import Icon from 'react-native-vector-icons/AntDesign';
 import { Input, Button } from 'react-native-elements';
 import { _removeData } from './localStorage';
 import InputScrollView from 'react-native-input-scroll-view'; 
 import SocketIOClient from 'socket.io-client';
-import { host } from './config';
+import { SOCKET_HOST } from './config';
 
 export default class ChatScreen extends React.Component {
   constructor(props) {
     super(props);
     this.state ={
       message: '',
+      messages: []
     }
     // Creating the socket-client instance will automatically connect to the server.
-    this.socket = SocketIOClient(host);
+    this.socket = SocketIOClient(SOCKET_HOST);
+    this.socket.on('messages-from-server', (messages) => this.updateAllChat(messages));
+    this.socket.on('message-from-server', (message) => this.updateChat(message));
+  }
+  updateAllChat(messages) {
+    this.setState(prevState => ({
+      messages: [...prevState.messages, ...messages]
+    }))
+  }
+  updateChat(message) {
+    this.setState(prevState => ({
+      messages: [...prevState.messages, message]
+    }))
   }
   static navigationOptions = ({ navigation }) => {
     return {
@@ -41,16 +54,22 @@ export default class ChatScreen extends React.Component {
     if(message.length > 0) {
       console.log(this.state.message);
       this.setState({ message: '' });
+      this.socket.emit('message-from-client', "asdfasdf");
     }
   }
   render() {
     const color = '#6a739f';
+    const messages = this.state.messages.map((el, i)=> (<Text style={{color: 'white'}} key={i}>{el.message}</Text>));
+    // console.log(this.state.messages)
     return (
       <View style={{ flex: 1 }}>
         <View style={{ flex: 10, backgroundColor:'red' }}>
-          <InputScrollView>
+        {messages}
+          {/* <InputScrollView style={{ flex: 1 }}>
+          <TextInput />
+            <TextInput />
             
-          </InputScrollView>
+          </InputScrollView> */}
         </View>
         <View style={{ flex: 1, backgroundColor:'#2e3246' }}>
           <Input
