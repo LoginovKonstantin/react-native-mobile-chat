@@ -14,12 +14,11 @@ export default class LoginForm extends React.Component {
   handleLogin(value) {
     this.setState({ login: value });
   }
-  handlePassword(value) {
-    this.setState({ password: value })
-  }
   login() {
-    const { login, password } = this.state;
+    const login = this.state.login;
+    const password = this.state.password;
     if (
+      login && password &&
       login.length > 1 &&
       login.length < 20 &&
       password.length > 1 &&
@@ -47,7 +46,7 @@ export default class LoginForm extends React.Component {
         console.error(error);
       });
     } else {
-      console.log('error');
+      console.log('Error login or password is empty' + login + password);
     }
 
   }
@@ -63,7 +62,7 @@ export default class LoginForm extends React.Component {
         <View style={{ flex: 1, justifyContent: 'center', alignItems: 'center' }} >
           <Input
             value={this.state.login}
-            onChange={(e) => this.handleLogin(e.target.value)}
+            onChangeText={ p => this.setState({ login: p }) }
             maxLength={20}
             underlineColorAndroid={color}
             containerStyle={styles.containerStyleInput}
@@ -73,7 +72,7 @@ export default class LoginForm extends React.Component {
           />
           <Input
             value={this.state.password}
-            onChange={(e) => this.handlePassword(e.target.value)}
+            onChangeText={ p => this.setState({ password: p }) }
             maxLength={20}
             underlineColorAndroid={color}
             containerStyle={styles.containerStyleInput}
@@ -83,7 +82,7 @@ export default class LoginForm extends React.Component {
             leftIcon={<CustomIcon isPassword={true} />}
           />
           <Button
-            onClick={() => this.login()}
+            onPress={() => this.login()}
             buttonStyle={styles.buttonStyle}
             title="SIGN IN"
           />
@@ -96,7 +95,7 @@ export default class LoginForm extends React.Component {
 }
 const CustomIcon = ({ isPassword }) => (
   <Icon
-    style={{ marginRight: '10px', marginLeft: '-10px' }}
+    style={{ marginRight: 10, marginLeft: -10 }}
     name={isPassword ? 'lock' : 'user'}
     size={24}
     color='#6a739f'
@@ -104,17 +103,17 @@ const CustomIcon = ({ isPassword }) => (
 )
 const styles = StyleSheet.create({
   buttonStyle: {
-    width: '150px',
-    padding: '15px',
+    width: 150,
+    padding: 15,
     backgroundColor: '#6a739f'
   },
   containerStyleInput: {
-    marginBottom: '20px',
-    borderWidth: '2px',
+    marginBottom: 20,
+    borderWidth: 2,
     borderColor: '#6a739f',
-    borderRadius: '20px',
-    minWidth: '300px',
-    maxWidth: '300px'
+    borderRadius: 20,
+    minWidth: 300,
+    maxWidth: 300
   },
   container: {
     flex: 1,

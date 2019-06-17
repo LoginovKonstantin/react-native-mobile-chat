@@ -12,8 +12,8 @@ class App extends React.Component {
   }
   async componentDidMount() {
     const token = await _getData('token');
-    console.log(token)
-    fetch(`${REST_HOST}/api/token/`, {
+    if (token) {
+      fetch(`${REST_HOST}/api/token/`, {
         method: 'POST',
         headers: {
           Accept: 'application/json',
@@ -21,25 +21,26 @@ class App extends React.Component {
         },
         body: JSON.stringify({ token }),
       }).then((response) => response.json())
-      .then(async (json) => {
-        if(json && json.token) {
-          this.props.navigation.push('Chat')
-        } else {
-          await _removeData('login', login);
-          await _removeData('token', token);
-          this.props.navigation.push('Login')
-        }
-      })
-      .catch((error) => {
-        console.error(error);
-      });    
+        .then(async (json) => {
+          if (json && json.token) {
+            this.props.navigation.push('Chat')
+          } else {
+            await _removeData('login', login);
+            await _removeData('token', token);
+            this.props.navigation.push('Login')
+          }
+        })
+        .catch((error) => {
+          console.error(error);
+        });
+    }
   }
 
   render() {
     return (
       <View style={{ flex: 1, backgroundColor: '#2e3246' }}>
         <View style={{ flex: 1, justifyContent: 'flex-end', alignItems: 'center' }} >
-          <Image style={{ width: 100, height: 100, marginTop: '300px' }} source={require('./assets/logo1.png')} />
+          <Image style={{ width: 100, height: 100, marginTop: 300 }} source={require('./assets/logo1.png')} />
         </View>
         <View style={{ flex: 1 }} >
           <LoginForm {...this.props} />
