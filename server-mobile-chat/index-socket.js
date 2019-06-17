@@ -26,17 +26,20 @@ server.listen(port, (err) => {
   if (err) { return console.log('something bad happened', err); };
   console.log(`Sockets-server listening on ${port}`);
 })
-const messages = [
-  { from: 'asdfasdf', message: '11212', time: '23:45:44' },
-  { from: 'asdfasdf', message: '11212', time: '23:45:44' }
+let messages = [
+  // { from: 'asdfasdf', message: '11212', time: '1560756467835' },
 ];
+
 io.on('connection', function (socket) {
   socket.emit('messages-from-server', messages);
+  
   socket.on('message-from-client', function (data) {
+    if(messages.length > 150) { // limit 150 messages
+      messages.shift();
+    }
     messages.push(data);
-
-    console.log(data);
-    socket.emit('message-from-server', data)
+    socket.broadcast.emit('message-from-server', data);
+    socket.emit('message-from-server', data);
   });
 });
 
