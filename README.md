@@ -19,5 +19,5 @@
 
 #### Хостинг
 - Клиент `https://expo.io/@konstantinloginov/client-mobile-chat`
-- Рест сервер `https://rest-server-mobile-chat.herokuapp.com`
-- Сервер с сокетами `https://sockets-server-mobile-chat.herokuapp.com/`
+- Рест сервер `https://rest-server-mobile-chat.herokuapp.com` репозиторий (rest-server-mobile-chat)[https://github.com/kotAndEgor/rest-server-mobile-chat]
+- Сервер с сокетами `https://sockets-server-mobile-chat.herokuapp.com/` репозиторий (sockets-server-mobile-chat)[https://github.com/kotAndEgor/sockets-server-mobile-chat]
